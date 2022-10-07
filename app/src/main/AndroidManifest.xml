@@ -13,6 +13,16 @@
         android:theme="@style/Theme.HappyPlacesApp"
         tools:targetApi="31">
         <activity
+            android:name=".AddPlacesActivity"
+            android:exported="false"
+            android:label="ADD PLACE"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/CustomNoActionBarTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
