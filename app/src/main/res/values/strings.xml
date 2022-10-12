@@ -6,4 +6,5 @@
     <string name="location">Location</string>
     <string name="add_image">ADD IMAGE</string>
     <string name="save">Save</string>
+    <string name="fab_activity_main_content_desc">Floating action button to add happy places</string>
 </resources>

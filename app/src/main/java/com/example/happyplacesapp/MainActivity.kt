@@ -4,23 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.happyplacesapp.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private var mActivity: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mActivity = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mActivity?.root)
+        setContentView(R.layout.activity_main)
         setOnClick()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mActivity = null
-    }
-
     private fun setOnClick() {
-        mActivity?.fabAdd?.setOnClickListener {
+        fab_activity_main_add.setOnClickListener {
             val intent = Intent(this, AddPlacesActivity::class.java)
             startActivity(intent)
         }

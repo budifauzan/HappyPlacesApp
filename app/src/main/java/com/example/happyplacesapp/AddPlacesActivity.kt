@@ -1,34 +1,50 @@
 package com.example.happyplacesapp
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.example.happyplacesapp.databinding.ActivityAddPlacesBinding
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_add_places.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
-    private var mActivity: ActivityAddPlacesBinding? = null
+    companion object {
+        private const val CAMERA = 1
+        private const val PICK_FROM_GALLERY = 2
+        private const val IMAGE_DIRECTORY = "HappyPlacesImages"
+    }
+
     private var cal: Calendar? = null
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mActivity = ActivityAddPlacesBinding.inflate(layoutInflater)
-        setContentView(mActivity?.root)
+        setContentView(R.layout.activity_add_places)
         setToolbar()
 
         cal = Calendar.getInstance()
@@ -38,18 +54,13 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             cal?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateToView()
         }
-        mActivity?.edtDate?.setOnClickListener(this)
-        mActivity?.tvAddImage?.setOnClickListener(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mActivity = null
+        edt_activity_add_places_date.setOnClickListener(this)
+        tv_activity_add_places_add_image.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.tv_add_image -> {
+            R.id.tv_activity_add_places_add_image -> {
                 val pictureDialog = AlertDialog.Builder(this)
                 pictureDialog.setTitle("Select Action")
                 val pictureDialogItems =
@@ -60,13 +71,13 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                             choosePhotoFromGallery()
                         }
                         1 -> {
-                            
+                            capturePhotoFromCamera()
                         }
                     }
                 }
                 pictureDialog.show()
             }
-            R.id.edt_date -> {
+            R.id.edt_activity_add_places_date -> {
                 DatePickerDialog(
                     this,
                     dateSetListener,
@@ -80,9 +91,9 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setToolbar() {
-        setSupportActionBar(mActivity?.toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        mActivity?.toolbar?.setNavigationOnClickListener {
+        toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
     }
@@ -90,7 +101,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateDateToView() {
         val format = "MMMM dd, yyyy"
         val sdf = SimpleDateFormat(format, Locale.getDefault())
-        mActivity?.edtDate?.setText(sdf.format(cal!!.time).toString())
+        edt_activity_add_places_date.setText(sdf.format(cal!!.time).toString())
     }
 
     private fun choosePhotoFromGallery() {
@@ -99,9 +110,30 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         ).withListener(object : MultiplePermissionsListener {
             override fun onPermissionsChecked(report: MultiplePermissionsReport) {
                 if (report!!.areAllPermissionsGranted()) {
-                    Toast.makeText(
-                        this@AddPlacesActivity, "Storage READ/WRITE is granted", Toast.LENGTH_SHORT
-                    ).show()
+                    val intent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    startActivityForResult(intent, PICK_FROM_GALLERY)
+                }
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                permission: MutableList<PermissionRequest>?, token: PermissionToken?
+            ) {
+                showRationaleDialogForPermissions()
+            }
+        }).onSameThread().check()
+    }
+
+    private fun capturePhotoFromCamera() {
+        Dexter.withContext(this).withPermissions(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+        ).withListener(object : MultiplePermissionsListener {
+            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                if (report!!.areAllPermissionsGranted()) {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, CAMERA)
                 }
             }
 
@@ -128,5 +160,42 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         }.setNegativeButton("CANCEL") { dialog, _ ->
             dialog.dismiss()
         }.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CAMERA) {
+                val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
+                saveImagetoInternalStorage(thumbnail)
+                iv_activity_add_places_thumbnail.setImageBitmap(thumbnail)
+            } else if (requestCode == PICK_FROM_GALLERY) {
+                val contentURI = data!!.data
+                try {
+                    val selectedImageBitmap =
+                        MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                    saveImagetoInternalStorage(selectedImageBitmap)
+                    iv_activity_add_places_thumbnail.setImageBitmap(selectedImageBitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun saveImagetoInternalStorage(bitmap: Bitmap): Uri {
+        val wrapper = ContextWrapper(this)
+        var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return Uri.parse(file.absolutePath)
     }
 }
