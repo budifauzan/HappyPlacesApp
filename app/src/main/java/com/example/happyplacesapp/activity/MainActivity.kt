@@ -1,20 +1,21 @@
-package com.example.happyplacesapp
+package com.example.happyplacesapp.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.happyplacesapp.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private var binding: ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
         setOnClick()
     }
 
     private fun setOnClick() {
-        fab_activity_main_add.setOnClickListener {
+        binding?.fabActivityMainAdd?.setOnClickListener {
             val intent = Intent(this, AddPlacesActivity::class.java)
             startActivity(intent)
         }
