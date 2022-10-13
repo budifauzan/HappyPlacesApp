@@ -65,6 +65,11 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         binding?.btnActivityAddPlacesSave?.setOnClickListener(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
+
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.tv_activity_add_places_add_image -> {
