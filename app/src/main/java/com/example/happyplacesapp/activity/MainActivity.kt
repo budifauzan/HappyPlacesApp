@@ -1,21 +1,29 @@
 package com.example.happyplacesapp.activity
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
+import android.view.View.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.happyplacesapp.R
+import com.example.happyplacesapp.adapter.HappyPlacesAdapter
 import com.example.happyplacesapp.database.DatabaseHandler
 import com.example.happyplacesapp.databinding.ActivityMainBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
 
 class MainActivity : AppCompatActivity(), OnClickListener {
+    companion object {
+        private const val ADD_PLACE_ACTIVITY_REQUEST_CODE = 0
+    }
+
     private var binding: ActivityMainBinding? = null
     private var happyPlaceModels: ArrayList<HappyPlaceModel>? = null
+    private var happyPlacesAdapter: HappyPlacesAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +43,16 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         when (view?.id) {
             R.id.fab_activity_main_add -> {
                 val intent = Intent(this, AddPlacesActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, ADD_PLACE_ACTIVITY_REQUEST_CODE)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ADD_PLACE_ACTIVITY_REQUEST_CODE) {
+                getHappyPlacesData()
             }
         }
     }
@@ -44,9 +61,17 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val databaseHandler = DatabaseHandler(this)
         happyPlaceModels = databaseHandler.getHappyPlaces()
         if (happyPlaceModels!!.size > 0) {
-            for (i in happyPlaceModels!!) {
-                Log.e("asuu", i.description)
-            }
+            binding?.tvActivityMainNote?.visibility = INVISIBLE
+            binding?.rvActivityMainList?.visibility = VISIBLE
+            setRecyclerView()
         }
+    }
+
+    private fun setRecyclerView() {
+        happyPlacesAdapter = HappyPlacesAdapter(happyPlaceModels!!)
+        binding?.rvActivityMainList?.adapter = happyPlacesAdapter
+        binding?.rvActivityMainList?.setHasFixedSize(true)
+        binding?.rvActivityMainList?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 }

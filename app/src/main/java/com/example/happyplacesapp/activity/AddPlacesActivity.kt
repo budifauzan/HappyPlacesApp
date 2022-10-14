@@ -130,6 +130,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                             Toast.makeText(
                                 this, "Data has been saved succesfully!", Toast.LENGTH_SHORT
                             ).show()
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                     }
