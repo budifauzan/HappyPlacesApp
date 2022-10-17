@@ -19,6 +19,7 @@ import com.example.happyplacesapp.model.HappyPlaceModel
 class MainActivity : AppCompatActivity(), OnClickListener {
     companion object {
         private const val ADD_PLACE_ACTIVITY_REQUEST_CODE = 0
+        const val EXTRA_PLACE_DETAILS = "happyPlaceDetails"
     }
 
     private var binding: ActivityMainBinding? = null
@@ -73,5 +74,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding?.rvActivityMainList?.setHasFixedSize(true)
         binding?.rvActivityMainList?.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        happyPlacesAdapter?.setOnClickListener(object : HappyPlacesAdapter.OnClickListener {
+            override fun onClick(position: Int, happyPlaceModel: HappyPlaceModel) {
+                val intent = Intent(this@MainActivity, HappyPlaceDetailActivity::class.java)
+                intent.putExtra(EXTRA_PLACE_DETAILS, happyPlaceModel)
+                startActivity(intent)
+            }
+        })
     }
 }

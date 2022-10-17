@@ -19,7 +19,6 @@
         <activity
             android:name=".activity.HappyPlaceDetailActivity"
             android:exported="false"
-            android:label="DETAIl"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/CustomNoActionBarTheme">
             <meta-data
