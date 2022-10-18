@@ -72,6 +72,12 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(
         return result
     }
 
+    fun deleteHappyPlace(happyPlaceModel: HappyPlaceModel): Int {
+        val db = this.writableDatabase
+        val result = db.delete(TABLE_NAME, KEY_ID + "=" + happyPlaceModel.id, null)
+        db.close()
+        return result
+    }
 
     fun getHappyPlaces(): ArrayList<HappyPlaceModel> {
         val happyPlaceModels = ArrayList<HappyPlaceModel>()

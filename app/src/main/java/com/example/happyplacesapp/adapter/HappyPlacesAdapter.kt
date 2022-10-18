@@ -6,9 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.happyplacesapp.activity.AddPlacesActivity
 import com.example.happyplacesapp.activity.MainActivity
+import com.example.happyplacesapp.database.DatabaseHandler
 import com.example.happyplacesapp.databinding.ItemHappyPlaceBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
 
@@ -63,5 +65,18 @@ class HappyPlacesAdapter(
         intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, happyPlaceModels[position])
         activity.startActivityForResult(intent, requestCode)
         notifyItemChanged(position)
+    }
+
+    fun deleteItem(position: Int) {
+        val databaseHandler = DatabaseHandler(context)
+        val result =
+            databaseHandler.deleteHappyPlace(happyPlaceModels[position])
+        if (result > 0) {
+            happyPlaceModels.removeAt(position)
+            notifyItemRemoved(position)
+            Toast.makeText(
+                context, "Data has been deleted succesfully!", Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
