@@ -45,6 +45,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
     private var imageURI: Uri? = null
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
+    private var mHappyPlaceModel: HappyPlaceModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +61,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             updateDateToView()
         }
         updateDateToView()
+        setViewFromIntent()
         binding?.edtActivityAddPlacesDate?.setOnClickListener(this)
         binding?.tvActivityAddPlacesAddImage?.setOnClickListener(this)
         binding?.btnActivityAddPlacesSave?.setOnClickListener(this)
@@ -115,7 +117,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     else -> {
                         val happyPlaceModel = HappyPlaceModel(
-                            0,
+                            if (mHappyPlaceModel == null) 0 else mHappyPlaceModel!!.id,
                             binding?.edtActivityAddPlacesTitle?.text.toString(),
                             imageURI.toString(),
                             binding?.edtActivityAddPlacesDescription?.text.toString(),
@@ -125,14 +127,26 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                             mLongitude
                         )
                         val databaseHandler = DatabaseHandler(this)
-                        val result = databaseHandler.addHappyPlace(happyPlaceModel)
-                        if (result > 0) {
-                            Toast.makeText(
-                                this, "Data has been saved succesfully!", Toast.LENGTH_SHORT
-                            ).show()
-                            setResult(Activity.RESULT_OK)
-                            finish()
+                        if (mHappyPlaceModel == null) {
+                            val result = databaseHandler.addHappyPlace(happyPlaceModel)
+                            if (result > 0) {
+                                Toast.makeText(
+                                    this, "Data has been saved succesfully!", Toast.LENGTH_SHORT
+                                ).show()
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        } else {
+                            val result = databaseHandler.editHappyPlace(happyPlaceModel)
+                            if (result > 0) {
+                                Toast.makeText(
+                                    this, "Data has been saved succesfully!", Toast.LENGTH_SHORT
+                                ).show()
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
                         }
+
                     }
                 }
             }
@@ -246,5 +260,23 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             e.printStackTrace()
         }
         return Uri.parse(file.absolutePath)
+    }
+
+    private fun setViewFromIntent() {
+        if (intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)) {
+            mHappyPlaceModel = intent.getParcelableExtra(MainActivity.EXTRA_PLACE_DETAILS)
+        }
+        if (mHappyPlaceModel != null) {
+            supportActionBar?.title = "Edit Happy Place"
+            binding?.edtActivityAddPlacesTitle?.setText(mHappyPlaceModel?.title)
+            binding?.edtActivityAddPlacesDescription?.setText(mHappyPlaceModel?.description)
+            binding?.edtActivityAddPlacesDate?.setText(mHappyPlaceModel?.date)
+            binding?.edtActivityAddPlacesLocation?.setText(mHappyPlaceModel?.location)
+            mLatitude = mHappyPlaceModel!!.latitude
+            mLongitude = mHappyPlaceModel!!.longitude
+            imageURI = Uri.parse(mHappyPlaceModel?.image)
+            binding?.ivActivityAddPlacesThumbnail?.setImageURI(imageURI)
+            binding?.btnActivityAddPlacesSave?.text = "UPDATE"
+        }
     }
 }

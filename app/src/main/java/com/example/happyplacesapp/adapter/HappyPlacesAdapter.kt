@@ -1,14 +1,19 @@
 package com.example.happyplacesapp.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.happyplacesapp.activity.AddPlacesActivity
+import com.example.happyplacesapp.activity.MainActivity
 import com.example.happyplacesapp.databinding.ItemHappyPlaceBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
 
 class HappyPlacesAdapter(
+    val context: Context,
     private val happyPlaceModels: ArrayList<HappyPlaceModel>
 ) : RecyclerView.Adapter<HappyPlacesAdapter.ViewHolder>() {
 
@@ -51,5 +56,12 @@ class HappyPlacesAdapter(
 
     fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
+    }
+
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
+        val intent = Intent(context, AddPlacesActivity::class.java)
+        intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, happyPlaceModels[position])
+        activity.startActivityForResult(intent, requestCode)
+        notifyItemChanged(position)
     }
 }

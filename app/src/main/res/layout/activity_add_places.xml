@@ -16,7 +16,8 @@
         android:theme="@style/CustomToolbarStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Add Happy Place" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -119,15 +120,15 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                android:padding="4dp"
                 android:background="@drawable/add_image_border"
+                android:padding="4dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/add_screen_image_placeholder"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/tv_activity_add_places_add_image"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="@id/til_activity_add_places_location"
-                app:layout_constraintTop_toBottomOf="@id/til_activity_add_places_location" />
+                app:layout_constraintTop_toBottomOf="@id/til_activity_add_places_location"
+                app:srcCompat="@drawable/add_screen_image_placeholder" />
 
             <TextView
                 android:id="@+id/tv_activity_add_places_add_image"
