@@ -32,7 +32,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_activity_happy_place_detail_thumbnail"
+                android:id="@+id/iv_thumbnail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/activity_happy_place_detail_image_description"
@@ -44,7 +44,7 @@
                 app:srcCompat="@drawable/detail_screen_image_placeholder" />
 
             <TextView
-                android:id="@+id/tv_activity_happy_place_description"
+                android:id="@+id/tv_description"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -53,20 +53,31 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_activity_happy_place_detail_thumbnail"
+                app:layout_constraintTop_toBottomOf="@+id/iv_thumbnail"
                 tools:text="Description" />
 
             <TextView
-                android:id="@+id/tv_activity_happy_place_detail_location"
+                android:id="@+id/tv_location"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/color_primary"
-                app:layout_constraintEnd_toEndOf="@+id/tv_activity_happy_place_description"
-                app:layout_constraintStart_toStartOf="@+id/tv_activity_happy_place_description"
-                app:layout_constraintTop_toBottomOf="@+id/tv_activity_happy_place_description"
+                app:layout_constraintEnd_toEndOf="@+id/tv_description"
+                app:layout_constraintStart_toStartOf="@+id/tv_description"
+                app:layout_constraintTop_toBottomOf="@+id/tv_description"
                 tools:text="Location" />
+
+            <Button
+                android:id="@+id/btn_view_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/color_primary"
+                android:text="@string/btn_view_location_text"
+                app:layout_constraintEnd_toEndOf="@+id/tv_location"
+                app:layout_constraintStart_toStartOf="@+id/tv_location"
+                app:layout_constraintTop_toBottomOf="@+id/tv_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

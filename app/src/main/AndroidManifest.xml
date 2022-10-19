@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -15,17 +15,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyPlacesApp"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+        <activity
+            android:name=".activity.MapActivity"
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/CustomNoActionBarTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activity.HappyPlaceDetailActivity"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/CustomNoActionBarTheme" >
+            android:theme="@style/CustomNoActionBarTheme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -34,14 +47,14 @@
             android:name=".activity.AddPlacesActivity"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/CustomNoActionBarTheme" >
+            android:theme="@style/CustomNoActionBarTheme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

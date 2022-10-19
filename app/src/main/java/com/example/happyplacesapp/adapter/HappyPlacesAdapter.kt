@@ -47,9 +47,9 @@ class HappyPlacesAdapter(
 
     class ViewHolder(itemHappyPlaceBinding: ItemHappyPlaceBinding) :
         RecyclerView.ViewHolder(itemHappyPlaceBinding.root) {
-        val civIcon = itemHappyPlaceBinding.civItemHappyPlaceIcon
-        val tvTitle = itemHappyPlaceBinding.tvItemHappyPlaceTitle
-        val tvDescription = itemHappyPlaceBinding.tvItemHappyPlaceDescription
+        val civIcon = itemHappyPlaceBinding.civIcon
+        val tvTitle = itemHappyPlaceBinding.tvTitle
+        val tvDescription = itemHappyPlaceBinding.tvDescription
     }
 
     interface OnClickListener {

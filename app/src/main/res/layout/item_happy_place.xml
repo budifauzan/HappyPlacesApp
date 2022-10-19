@@ -9,7 +9,7 @@
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_item_happy_place_container"
+        android:id="@+id/cl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="8dp"
@@ -18,7 +18,7 @@
         android:paddingBottom="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_item_happy_place_icon"
+            android:id="@+id/civ_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@mipmap/ic_launcher"
@@ -29,28 +29,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_item_happy_place_title"
+            android:id="@+id/tv_title"
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tv_item_happy_place_description"
+            app:layout_constraintBottom_toTopOf="@+id/tv_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/civ_item_happy_place_icon"
+            app:layout_constraintStart_toEndOf="@+id/civ_icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/tv_item_happy_place_description"
+            android:id="@+id/tv_description"
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tv_item_happy_place_title"
-            app:layout_constraintStart_toStartOf="@+id/tv_item_happy_place_title"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_happy_place_title"
+            app:layout_constraintEnd_toEndOf="@+id/tv_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Description" />
 

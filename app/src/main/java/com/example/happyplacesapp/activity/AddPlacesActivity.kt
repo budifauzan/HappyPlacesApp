@@ -72,10 +72,10 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
 
         updateDateToView()
         setViewFromIntent()
-        binding?.edtActivityAddPlacesDate?.setOnClickListener(this)
-        binding?.tvActivityAddPlacesAddImage?.setOnClickListener(this)
-        binding?.btnActivityAddPlacesSave?.setOnClickListener(this)
-        binding?.edtActivityAddPlacesLocation?.setOnClickListener(this)
+        binding?.edtDate?.setOnClickListener(this)
+        binding?.tvAddImage?.setOnClickListener(this)
+        binding?.btnSave?.setOnClickListener(this)
+        binding?.edtLocation?.setOnClickListener(this)
     }
 
     override fun onDestroy() {
@@ -85,7 +85,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.tv_activity_add_places_add_image -> {
+            R.id.tv_add_image -> {
                 val pictureDialog = AlertDialog.Builder(this)
                 pictureDialog.setTitle("Select Action")
                 val pictureDialogItems =
@@ -102,7 +102,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 pictureDialog.show()
             }
-            R.id.edt_activity_add_places_date -> {
+            R.id.edt_date -> {
                 DatePickerDialog(
                     this,
                     dateSetListener,
@@ -111,16 +111,16 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                     cal!!.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
-            R.id.btn_activity_add_places_save -> {
+            R.id.btn_save -> {
                 when {
-                    binding?.edtActivityAddPlacesTitle?.text.isNullOrEmpty() -> {
+                    binding?.edtTitle?.text.isNullOrEmpty() -> {
                         Toast.makeText(this, "Please enter a title!", Toast.LENGTH_SHORT).show()
                     }
-                    binding?.edtActivityAddPlacesDescription?.text.isNullOrEmpty() -> {
+                    binding?.edtDescription?.text.isNullOrEmpty() -> {
                         Toast.makeText(this, "Please enter a description!", Toast.LENGTH_SHORT)
                             .show()
                     }
-                    binding?.edtActivityAddPlacesLocation?.text.isNullOrEmpty() -> {
+                    binding?.edtLocation?.text.isNullOrEmpty() -> {
                         Toast.makeText(this, "Please enter a location!", Toast.LENGTH_SHORT).show()
                     }
                     imageURI == null -> {
@@ -129,11 +129,11 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                     else -> {
                         val happyPlaceModel = HappyPlaceModel(
                             if (mHappyPlaceModel == null) 0 else mHappyPlaceModel!!.id,
-                            binding?.edtActivityAddPlacesTitle?.text.toString(),
+                            binding?.edtTitle?.text.toString(),
                             imageURI.toString(),
-                            binding?.edtActivityAddPlacesDescription?.text.toString(),
-                            binding?.edtActivityAddPlacesDate?.text.toString(),
-                            binding?.edtActivityAddPlacesLocation?.text.toString(),
+                            binding?.edtDescription?.text.toString(),
+                            binding?.edtDate?.text.toString(),
+                            binding?.edtLocation?.text.toString(),
                             mLatitude,
                             mLongitude
                         )
@@ -161,13 +161,10 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
-            R.id.edt_activity_add_places_location -> {
+            R.id.edt_location -> {
                 try {
                     val fields = listOf(
-                        Place.Field.ID,
-                        Place.Field.NAME,
-                        Place.Field.LAT_LNG,
-                        Place.Field.ADDRESS
+                        Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS
                     )
                     val intent =
                         Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
@@ -191,7 +188,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateDateToView() {
         val format = "MMMM dd, yyyy"
         val sdf = SimpleDateFormat(format, Locale.getDefault())
-        binding?.edtActivityAddPlacesDate?.setText(sdf.format(cal!!.time).toString())
+        binding?.edtDate?.setText(sdf.format(cal!!.time).toString())
     }
 
     private fun choosePhotoFromGallery() {
@@ -258,20 +255,20 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             if (requestCode == CAMERA) {
                 val thumbnail: Bitmap = data!!.extras!!.get("data") as Bitmap
                 imageURI = saveImagetoInternalStorage(thumbnail)
-                binding?.ivActivityAddPlacesThumbnail?.setImageBitmap(thumbnail)
+                binding?.ivThumbnail?.setImageBitmap(thumbnail)
             } else if (requestCode == PICK_FROM_GALLERY) {
                 val contentURI = data!!.data
                 try {
                     val selectedImageBitmap =
                         MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
                     imageURI = saveImagetoInternalStorage(selectedImageBitmap)
-                    binding?.ivActivityAddPlacesThumbnail?.setImageBitmap(selectedImageBitmap)
+                    binding?.ivThumbnail?.setImageBitmap(selectedImageBitmap)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
             } else if (requestCode == PLACE_AUTO_COMPLETE_REQ_CODE) {
                 val place: Place = Autocomplete.getPlaceFromIntent(data!!)
-                binding?.edtActivityAddPlacesLocation?.setText(place.address)
+                binding?.edtLocation?.setText(place.address)
                 mLatitude = place.latLng!!.latitude
                 mLongitude = place.latLng!!.longitude
             }
@@ -300,16 +297,15 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         }
         if (mHappyPlaceModel != null) {
             supportActionBar?.title = "Edit Happy Place"
-            binding?.edtActivityAddPlacesTitle?.setText(mHappyPlaceModel?.title)
-            binding?.edtActivityAddPlacesDescription?.setText(mHappyPlaceModel?.description)
-            binding?.edtActivityAddPlacesDate?.setText(mHappyPlaceModel?.date)
-            binding?.edtActivityAddPlacesLocation?.setText(mHappyPlaceModel?.location)
+            binding?.edtTitle?.setText(mHappyPlaceModel?.title)
+            binding?.edtDescription?.setText(mHappyPlaceModel?.description)
+            binding?.edtDate?.setText(mHappyPlaceModel?.date)
+            binding?.edtLocation?.setText(mHappyPlaceModel?.location)
             mLatitude = mHappyPlaceModel!!.latitude
             mLongitude = mHappyPlaceModel!!.longitude
             imageURI = Uri.parse(mHappyPlaceModel?.image)
-            binding?.ivActivityAddPlacesThumbnail?.setImageURI(imageURI)
-            binding?.btnActivityAddPlacesSave?.text =
-                getString(R.string.add_places_activity_button_update)
+            binding?.ivThumbnail?.setImageURI(imageURI)
+            binding?.btnSave?.text = getString(R.string.add_places_activity_button_update)
         }
     }
 }

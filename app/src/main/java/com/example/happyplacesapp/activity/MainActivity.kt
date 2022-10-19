@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        binding?.fabActivityMainAdd?.setOnClickListener(this)
+        binding?.fabAdd?.setOnClickListener(this)
         getHappyPlacesData()
     }
 
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.fab_activity_main_add -> {
+            R.id.fab_add -> {
                 val intent = Intent(this, AddPlacesActivity::class.java)
                 startActivityForResult(intent, ADD_PLACE_ACTIVITY_REQUEST_CODE)
             }
@@ -63,20 +63,20 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val databaseHandler = DatabaseHandler(this)
         happyPlaceModels = databaseHandler.getHappyPlaces()
         if (happyPlaceModels!!.size > 0) {
-            binding?.tvActivityMainNote?.visibility = INVISIBLE
-            binding?.rvActivityMainList?.visibility = VISIBLE
+            binding?.tvNotification?.visibility = INVISIBLE
+            binding?.rvPlaceList?.visibility = VISIBLE
             setRecyclerView()
         } else {
-            binding?.tvActivityMainNote?.visibility = VISIBLE
-            binding?.rvActivityMainList?.visibility = INVISIBLE
+            binding?.tvNotification?.visibility = VISIBLE
+            binding?.rvPlaceList?.visibility = INVISIBLE
         }
     }
 
     private fun setRecyclerView() {
         happyPlacesAdapter = HappyPlacesAdapter(this, happyPlaceModels!!)
-        binding?.rvActivityMainList?.adapter = happyPlacesAdapter
-        binding?.rvActivityMainList?.setHasFixedSize(true)
-        binding?.rvActivityMainList?.layoutManager =
+        binding?.rvPlaceList?.adapter = happyPlacesAdapter
+        binding?.rvPlaceList?.setHasFixedSize(true)
+        binding?.rvPlaceList?.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         happyPlacesAdapter?.setOnClickListener(object : HappyPlacesAdapter.OnClickListener {
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
 
         val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
-        editItemTouchHelper.attachToRecyclerView(binding?.rvActivityMainList)
+        editItemTouchHelper.attachToRecyclerView(binding?.rvPlaceList)
 
         val deleteSwipeHandler = object : SwipeToDeleteCallback(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -106,6 +106,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
 
         val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
-        deleteItemTouchHelper.attachToRecyclerView(binding?.rvActivityMainList)
+        deleteItemTouchHelper.attachToRecyclerView(binding?.rvPlaceList)
     }
 }

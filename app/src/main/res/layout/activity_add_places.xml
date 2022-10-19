@@ -36,7 +36,7 @@
             android:paddingBottom="8dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_activity_add_places_title"
+                android:id="@+id/til_title"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -50,45 +50,45 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_activity_add_places_title"
+                    android:id="@+id/edt_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_activity_add_places_description"
+                android:id="@+id/til_description"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:boxStrokeColor="@color/color_primary"
                 app:hintTextColor="@color/color_primary"
-                app:layout_constraintEnd_toEndOf="@+id/til_activity_add_places_title"
-                app:layout_constraintStart_toStartOf="@+id/til_activity_add_places_title"
-                app:layout_constraintTop_toBottomOf="@+id/til_activity_add_places_title">
+                app:layout_constraintEnd_toEndOf="@+id/til_title"
+                app:layout_constraintStart_toStartOf="@+id/til_title"
+                app:layout_constraintTop_toBottomOf="@+id/til_title">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_activity_add_places_description"
+                    android:id="@+id/edt_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/description" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_activity_add_places_date"
+                android:id="@+id/til_date"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:boxStrokeColor="@color/color_primary"
                 app:hintTextColor="@color/color_primary"
-                app:layout_constraintEnd_toEndOf="@+id/til_activity_add_places_description"
-                app:layout_constraintStart_toStartOf="@+id/til_activity_add_places_description"
-                app:layout_constraintTop_toBottomOf="@+id/til_activity_add_places_description">
+                app:layout_constraintEnd_toEndOf="@+id/til_description"
+                app:layout_constraintStart_toStartOf="@+id/til_description"
+                app:layout_constraintTop_toBottomOf="@+id/til_description">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_activity_add_places_date"
+                    android:id="@+id/edt_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
@@ -97,19 +97,19 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_activity_add_places_location"
+                android:id="@+id/til_location"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:boxStrokeColor="@color/color_primary"
                 app:hintTextColor="@color/color_primary"
-                app:layout_constraintEnd_toEndOf="@+id/til_activity_add_places_date"
-                app:layout_constraintStart_toStartOf="@+id/til_activity_add_places_date"
-                app:layout_constraintTop_toBottomOf="@+id/til_activity_add_places_date">
+                app:layout_constraintEnd_toEndOf="@+id/til_date"
+                app:layout_constraintStart_toStartOf="@+id/til_date"
+                app:layout_constraintTop_toBottomOf="@+id/til_date">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_activity_add_places_location"
+                    android:id="@+id/edt_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
@@ -118,7 +118,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_activity_add_places_thumbnail"
+                android:id="@+id/iv_thumbnail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
@@ -126,14 +126,14 @@
                 android:padding="4dp"
                 android:scaleType="fitCenter"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toStartOf="@+id/tv_activity_add_places_add_image"
+                app:layout_constraintEnd_toStartOf="@+id/tv_add_image"
                 app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="@id/til_activity_add_places_location"
-                app:layout_constraintTop_toBottomOf="@id/til_activity_add_places_location"
+                app:layout_constraintStart_toStartOf="@id/til_location"
+                app:layout_constraintTop_toBottomOf="@id/til_location"
                 app:srcCompat="@drawable/add_screen_image_placeholder" />
 
             <TextView
-                android:id="@+id/tv_activity_add_places_add_image"
+                android:id="@+id/tv_add_image"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/btn_height"
@@ -143,22 +143,22 @@
                 android:text="@string/add_image"
                 android:textColor="@color/color_primary"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_activity_add_places_thumbnail"
-                app:layout_constraintEnd_toEndOf="@+id/til_activity_add_places_location"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_thumbnail"
+                app:layout_constraintEnd_toEndOf="@+id/til_location"
                 app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@+id/iv_activity_add_places_thumbnail"
-                app:layout_constraintTop_toTopOf="@+id/iv_activity_add_places_thumbnail" />
+                app:layout_constraintStart_toEndOf="@+id/iv_thumbnail"
+                app:layout_constraintTop_toTopOf="@+id/iv_thumbnail" />
 
             <Button
-                android:id="@+id/btn_activity_add_places_save"
+                android:id="@+id/btn_save"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/color_primary"
                 android:text="@string/save"
-                app:layout_constraintEnd_toEndOf="@+id/tv_activity_add_places_add_image"
-                app:layout_constraintStart_toStartOf="@+id/iv_activity_add_places_thumbnail"
-                app:layout_constraintTop_toBottomOf="@+id/iv_activity_add_places_thumbnail" />
+                app:layout_constraintEnd_toEndOf="@+id/tv_add_image"
+                app:layout_constraintStart_toStartOf="@+id/iv_thumbnail"
+                app:layout_constraintTop_toBottomOf="@+id/iv_thumbnail" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

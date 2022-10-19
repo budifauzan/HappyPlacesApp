@@ -7,7 +7,7 @@
     tools:context=".activity.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_activity_main_list"
+        android:id="@+id/rv_place_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_activity_main_note"
+        android:id="@+id/tv_notification"
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_activity_main_add"
+        android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"

@@ -11,11 +11,19 @@ import com.example.happyplacesapp.model.HappyPlaceModel
 
 class HappyPlaceDetailActivity : AppCompatActivity() {
     private var binding: ActivityHappyPlaceDetailBinding? = null
+    var happyPlaceModel: HappyPlaceModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHappyPlaceDetailBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+
         setViewFromIntent()
+        binding?.btnViewLocation?.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra(EXTRA_PLACE_DETAILS, happyPlaceModel)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -23,9 +31,7 @@ class HappyPlaceDetailActivity : AppCompatActivity() {
         binding = null
     }
 
-
     private fun setViewFromIntent() {
-        var happyPlaceModel: HappyPlaceModel? = null
 
         if (intent.hasExtra(EXTRA_PLACE_DETAILS)) {
             happyPlaceModel = intent.getParcelableExtra(EXTRA_PLACE_DETAILS)
@@ -34,14 +40,14 @@ class HappyPlaceDetailActivity : AppCompatActivity() {
         if (happyPlaceModel != null) {
             setSupportActionBar(binding?.toolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            binding?.toolbar?.title = happyPlaceModel.title
+            binding?.toolbar?.title = happyPlaceModel?.title
             binding?.toolbar?.setNavigationOnClickListener {
                 onBackPressed()
             }
 
-            binding?.ivActivityHappyPlaceDetailThumbnail?.setImageURI(Uri.parse(happyPlaceModel.image))
-            binding?.tvActivityHappyPlaceDescription?.text = happyPlaceModel.description
-            binding?.tvActivityHappyPlaceDetailLocation?.text = happyPlaceModel.location
+            binding?.ivThumbnail?.setImageURI(Uri.parse(happyPlaceModel?.image))
+            binding?.tvDescription?.text = happyPlaceModel?.description
+            binding?.tvLocation?.text = happyPlaceModel?.location
         }
     }
 }

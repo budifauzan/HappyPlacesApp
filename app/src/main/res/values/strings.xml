@@ -11,4 +11,5 @@
     <string name="activity_happy_place_detail_image_description">Happy place thumbnail</string>
     <string name="google_maps_api_key">AIzaSyC3aBMeGMXGh_CUABk6YoV6WlVmvN8DNwc</string>
     <string name="add_places_activity_button_update">UPDATE</string>
+    <string name="btn_view_location_text">View Location</string>
 </resources>
