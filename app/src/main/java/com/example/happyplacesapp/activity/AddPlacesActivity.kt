@@ -20,6 +20,10 @@ import com.example.happyplacesapp.R
 import com.example.happyplacesapp.database.DatabaseHandler
 import com.example.happyplacesapp.databinding.ActivityAddPlacesBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -37,6 +41,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         private const val CAMERA = 1
         private const val PICK_FROM_GALLERY = 2
         private const val IMAGE_DIRECTORY = "HappyPlacesImages"
+        private const val PLACE_AUTO_COMPLETE_REQ_CODE = 3
     }
 
     private var binding: ActivityAddPlacesBinding? = null
@@ -60,11 +65,17 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             cal?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateToView()
         }
+
+        if (!Places.isInitialized()) {
+            Places.initialize(this, resources.getString(R.string.google_maps_api_key))
+        }
+
         updateDateToView()
         setViewFromIntent()
         binding?.edtActivityAddPlacesDate?.setOnClickListener(this)
         binding?.tvActivityAddPlacesAddImage?.setOnClickListener(this)
         binding?.btnActivityAddPlacesSave?.setOnClickListener(this)
+        binding?.edtActivityAddPlacesLocation?.setOnClickListener(this)
     }
 
     override fun onDestroy() {
@@ -148,6 +159,22 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                         }
 
                     }
+                }
+            }
+            R.id.edt_activity_add_places_location -> {
+                try {
+                    val fields = listOf(
+                        Place.Field.ID,
+                        Place.Field.NAME,
+                        Place.Field.LAT_LNG,
+                        Place.Field.ADDRESS
+                    )
+                    val intent =
+                        Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                            .build(this)
+                    startActivityForResult(intent, PLACE_AUTO_COMPLETE_REQ_CODE)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -242,6 +269,11 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
+            } else if (requestCode == PLACE_AUTO_COMPLETE_REQ_CODE) {
+                val place: Place = Autocomplete.getPlaceFromIntent(data!!)
+                binding?.edtActivityAddPlacesLocation?.setText(place.address)
+                mLatitude = place.latLng!!.latitude
+                mLongitude = place.latLng!!.longitude
             }
         }
     }
@@ -276,7 +308,8 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             mLongitude = mHappyPlaceModel!!.longitude
             imageURI = Uri.parse(mHappyPlaceModel?.image)
             binding?.ivActivityAddPlacesThumbnail?.setImageURI(imageURI)
-            binding?.btnActivityAddPlacesSave?.text = "UPDATE"
+            binding?.btnActivityAddPlacesSave?.text =
+                getString(R.string.add_places_activity_button_update)
         }
     }
 }
