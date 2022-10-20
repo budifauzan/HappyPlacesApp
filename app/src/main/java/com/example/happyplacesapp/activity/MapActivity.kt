@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.example.happyplacesapp.R
 import com.example.happyplacesapp.databinding.ActivityMapBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback

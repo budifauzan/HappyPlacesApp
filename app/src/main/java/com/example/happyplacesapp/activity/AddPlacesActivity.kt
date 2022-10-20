@@ -1,6 +1,7 @@
 package com.example.happyplacesapp.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -9,17 +10,27 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
+import android.location.LocationManager
+import android.location.LocationRequest
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.happyplacesapp.R
 import com.example.happyplacesapp.database.DatabaseHandler
 import com.example.happyplacesapp.databinding.ActivityAddPlacesBinding
 import com.example.happyplacesapp.model.HappyPlaceModel
+import com.example.happyplacesapp.utils.GetAddressFromLatLong
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -47,6 +58,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
     private var binding: ActivityAddPlacesBinding? = null
     private var cal: Calendar? = null
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    private lateinit var mFusedLocationProvider: FusedLocationProviderClient
     private var imageURI: Uri? = null
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
@@ -57,6 +69,8 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityAddPlacesBinding.inflate(layoutInflater)
         setContentView(binding?.root)
         setToolbar()
+
+        mFusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
 
         cal = Calendar.getInstance()
         dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -76,6 +90,7 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
         binding?.tvAddImage?.setOnClickListener(this)
         binding?.btnSave?.setOnClickListener(this)
         binding?.edtLocation?.setOnClickListener(this)
+        binding?.btnSelectCurrentLoc?.setOnClickListener(this)
     }
 
     override fun onDestroy() {
@@ -172,6 +187,31 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
                     startActivityForResult(intent, PLACE_AUTO_COMPLETE_REQ_CODE)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                }
+            }
+            R.id.btn_select_current_loc -> {
+                if (!isLocationEnabled()) {
+                    Toast.makeText(this, "Location permission is turned off", Toast.LENGTH_SHORT)
+                        .show()
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                } else {
+                    Dexter.withContext(this).withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ).withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                            if (report!!.areAllPermissionsGranted()) {
+                                getCurrentLocation()
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permission: MutableList<PermissionRequest>?, token: PermissionToken?
+                        ) {
+                            showRationaleDialogForPermissions()
+                        }
+                    }).onSameThread().check()
                 }
             }
         }
@@ -307,5 +347,44 @@ class AddPlacesActivity : AppCompatActivity(), View.OnClickListener {
             binding?.ivThumbnail?.setImageURI(imageURI)
             binding?.btnSave?.text = getString(R.string.add_places_activity_button_update)
         }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    private val mLocationCallBack = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val mLastLocation: Location? = locationResult.lastLocation
+            mLatitude = mLastLocation!!.latitude
+            mLongitude = mLastLocation.longitude
+
+            val addressTask = GetAddressFromLatLong(this@AddPlacesActivity, mLatitude, mLongitude)
+            addressTask.setAdressListener(object : GetAddressFromLatLong.AddressListener {
+                override fun onAddressFound(address: String?) {
+                    binding?.edtLocation?.setText(address)
+                }
+
+                override fun onError() {
+                    Log.e("Get address : ", "Something went wrong")
+                }
+            })
+            addressTask.getAddress()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+        val locationRequest = com.google.android.gms.location.LocationRequest()
+        locationRequest.priority = LocationRequest.QUALITY_HIGH_ACCURACY
+        locationRequest.numUpdates = 1
+
+        mFusedLocationProvider.requestLocationUpdates(
+            locationRequest, mLocationCallBack, Looper.myLooper()
+        )
     }
 }
